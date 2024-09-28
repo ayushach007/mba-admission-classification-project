@@ -163,3 +163,4 @@ cython_debug/
 
 # manually added
 admission/
+mba_classification.egg-info/
