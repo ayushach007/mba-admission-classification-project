@@ -7,6 +7,8 @@ data_ingestion:
   test_data_path: artifacts/data_ingestion/test_data.csv
 
 data_transformation:
+  root_dir: artifacts/data_transformation/
+  preprocessor_obj_path: artifacts/data_transformation/preprocessor.joblib
   train_arr_path: artifacts/data_transformation/train_arr.csv
   test_arr_path: artifacts/data_transformation/test_arr.csv
 

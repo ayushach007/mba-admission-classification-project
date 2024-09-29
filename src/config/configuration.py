@@ -3,7 +3,7 @@ from src.logger import logging
 from src.exception import CustomException
 from src import *
 from src.utils.common import read_yaml_file, create_directory
-from src.entity.config_entity import DataIngestionConfig
+from src.entity.config_entity import (DataIngestionConfig, DataTransformationConfig)
 
 class ConfigurationManager:
     def __init__(self,
@@ -44,5 +44,28 @@ class ConfigurationManager:
         
         except Exception as e:
             raise CustomException(e, sys)
+    
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        try:
+            logging.info("Getting data transformation config")
+            config = self.config.data_transformation
+
+            logging.info("Creating directories to store transformed data")
+            create_directory([config.root_dir])
+
+            logging.info("Directories have been created successfully to store transformed data")
+
+            logging.info("Returning data transformation config")
+            data_transformation_config = DataTransformationConfig(
+                preprocessor_obj_path = config.preprocessor_obj_path,
+                train_arr = config.train_arr_path,
+                test_arr = config.test_arr_path
+            )
+
+            return data_transformation_config
+
+        except Exception as e:
+            raise CustomException(e, sys)
+
     
         

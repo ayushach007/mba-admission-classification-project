@@ -11,6 +11,7 @@ import joblib
 import mysql.connector as mysql
 from dotenv import load_dotenv
 import pandas as pd
+import numpy as np
 
 load_dotenv()
 
@@ -60,24 +61,45 @@ def create_directory(path_to_directories: list, verbose: bool = True):
     
 
 @ensure_annotations
-def save_object(object, model_path: Path, verbose: bool = True):
+def save_object(object, object_path: str, verbose: bool = True):
     '''Save the object as a joblib file
 
     Args:
-        model (object): Model to be saved
-        model_path (str): Path to save the model
-        verbose (bool, optional): If True, logs the model saving. Defaults to True.
+        object: Object to be saved
+        object_path (str): Path to save the object
+        verbose (bool, optional): If True, logs the object saving. Defaults to True.
 
     Raises:
         CustomException: If there is an error saving the model
     '''
     try:
-        joblib.dump(object, model_path)
+        logging.info(f"Saving model at path {object_path}")
+        joblib.dump(object, object_path)
         if verbose:
-            logging.info(f"Model saved at path {model_path}")
+            logging.info(f"Model saved at path {object_path}")
     except Exception as e:
         raise CustomException(e, sys)
-    
+
+@ensure_annotations
+def load_object(object_path: str):
+    '''Load the model from the joblib file
+
+    Args:
+        object_path (str): Path to the joblib file
+
+    Returns:
+        object: Model loaded from the joblib file
+
+    Raises:
+        CustomException: If there is an error loading the model
+    '''
+    try:
+        object = joblib.load(object_path)
+        logging.info(f"Model loaded from path {object_path}")
+        return object
+    except Exception as e:
+        raise CustomException(e, sys)
+
 @ensure_annotations
 def read_sql_data():
     '''Read data from a SQL database
@@ -102,3 +124,21 @@ def read_sql_data():
         return data
     except Exception as ex:
         raise CustomException(ex)
+    
+@ensure_annotations
+def save_transformed_data(data, path):
+    '''
+    This function saves the transformed data to the specified path
+
+    Args:
+        data: Data to be saved
+        path: Path to save the data
+        preprocessors: Preprocessor object used to transform the data
+    '''
+    try:
+        logging.info(f"Saving transformed data to path {path}")
+        data = pd.DataFrame(data)
+        data.to_csv(path, index=False, header=True)
+        logging.info(f"Data saved to path {path}")
+    except Exception as e:
+        raise CustomException(e, sys)

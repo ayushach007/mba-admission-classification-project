@@ -6,3 +6,9 @@ class DataIngestionConfig:
     raw_data_path: Path
     train_data_path: Path
     test_data_path: Path
+
+@dataclass(frozen=True)
+class DataTransformationConfig:
+    preprocessor_obj_path: Path
+    train_arr: Path
+    test_arr: Path
