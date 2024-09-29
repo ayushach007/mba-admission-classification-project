@@ -8,4 +8,9 @@ mysql-connector-python
 python-dotenv
 xgboost
 imblearn
-# -e .
+ensure
+pyYAML
+joblib
+types-PyYAML
+python-box
+-e .
