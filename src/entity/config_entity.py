@@ -12,3 +12,8 @@ class DataTransformationConfig:
     preprocessor_obj_path: Path
     train_arr: Path
     test_arr: Path
+
+@dataclass(frozen=True)
+class ModelTrainingConfig:
+    model_path: Path
+    model_metrics_path: Path

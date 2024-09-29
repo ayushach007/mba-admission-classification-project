@@ -13,6 +13,7 @@ data_transformation:
   test_arr_path: artifacts/data_transformation/test_arr.csv
 
 model_training:
+  root_dir: artifacts/model_training/
   model_path: artifacts/model_training/model.pkl
   model_metrics_path: artifacts/model_training/model_metrics.json
 

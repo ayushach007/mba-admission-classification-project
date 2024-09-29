@@ -11,18 +11,11 @@ class DataTransformationPipeline:
 
     def main(self):
         try:
-            # initialize configuration manager
-            config_manager = ConfigurationManager()
-
-            # Data Ingestion
-            obj = DataIngestion()
-            train_data, test_data = obj.initiate_data_ingestion()
-
-            # Data Transformation
-            data_transformation_config = config_manager.get_data_transformation_config()
+            config = ConfigurationManager()
+            data_transformation_config = config.get_data_transformation_config()
             data_transformation = DataTransformation(data_transformation_config)
-            data_transformation.initiate_data_transformation(train_data, test_data)
-
+            data_transformation.initiate_data_transformation()
+            
         except Exception as e:
             raise CustomException(e, sys)
         

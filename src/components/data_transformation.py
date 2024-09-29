@@ -99,7 +99,7 @@ class DataTransformation:
             test_data['admission'] = test_data['admission'].replace('', 'Rejected')
 
             logging.info("Splitting the data into input features and target feature")
-            target = ['admission']
+            target = 'admission'
 
             train_input_features = train_data.drop(columns=['admission', 'application_id'], axis=1)
             train_target_feature = train_data[target]
@@ -129,6 +129,9 @@ class DataTransformation:
             logging.info("Transforming the training target feature")
             transformed_train_target = target_encoder.transform(train_target_feature)
 
+            logging.info("Transforming the testing target feature")
+            transformed_test_target = target_encoder.transform(test_target_feature)
+
 
             logging.info("Combining the transformed training data and target feature")
             train_arr = np.c_[
@@ -139,7 +142,7 @@ class DataTransformation:
             logging.info("Combining the transformed testing data and target feature")
             test_arr = np.c_[
                 transformed_test_data,
-                test_target_feature
+                transformed_test_target
             ]
 
             logging.info("Saving the transformed trained data")

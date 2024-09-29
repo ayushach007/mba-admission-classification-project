@@ -3,7 +3,7 @@ from src.logger import logging
 from src.exception import CustomException
 from src import *
 from src.utils.common import read_yaml_file, create_directory
-from src.entity.config_entity import (DataIngestionConfig, DataTransformationConfig)
+from src.entity.config_entity import (DataIngestionConfig, DataTransformationConfig, ModelTrainingConfig)
 
 class ConfigurationManager:
     def __init__(self,
@@ -11,6 +11,7 @@ class ConfigurationManager:
                   params_file_path = PARAMS_FILE_PATH):
         try:
             self.config = read_yaml_file(config_file_path)
+            self.params = read_yaml_file(params_file_path)
 
             logging.info("Configuration and Parameters files have been read successfully")
 
@@ -64,6 +65,24 @@ class ConfigurationManager:
 
             return data_transformation_config
 
+        except Exception as e:
+            raise CustomException(e, sys)
+    
+    def get_model_config(self) -> ModelTrainingConfig:
+        try:
+            config = self.config.model_training
+            logging.info("Creating directories to store model artifacts")
+            create_directory([config.root_dir])
+
+            logging.info("Directories have been created successfully")
+
+            model_config = ModelTrainingConfig(
+                model_path = config.model_path,
+                model_metrics_path = config.model_metrics_path
+            )
+
+            return model_config
+        
         except Exception as e:
             raise CustomException(e, sys)
 
