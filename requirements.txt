@@ -6,4 +6,6 @@ scikit-learn
 notebook
 mysql-connector-python
 python-dotenv
+xgboost
+imblearn
 # -e .
