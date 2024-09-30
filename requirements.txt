@@ -13,4 +13,5 @@ pyYAML
 joblib
 types-PyYAML
 python-box
--e .
+streamlit
+# -e .

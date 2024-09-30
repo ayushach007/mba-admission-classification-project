@@ -7,7 +7,7 @@ from pathlib import Path
 from src.logger import logging
 from src.exception import CustomException
 from ensure import ensure_annotations
-import joblib
+import pickle
 import mysql.connector as mysql
 from dotenv import load_dotenv
 import pandas as pd
@@ -77,9 +77,11 @@ def save_object(object, object_path: str, verbose: bool = True):
     '''
     try:
         logging.info(f"Saving model at path {object_path}")
-        joblib.dump(object, object_path)
+        with open(object_path, 'wb') as file:
+            pickle.dump(object, file)
         if verbose:
             logging.info(f"Model saved at path {object_path}")
+
     except Exception as e:
         raise CustomException(e, sys)
 
@@ -97,12 +99,14 @@ def load_object(object_path: str):
         CustomException: If there is an error loading the model
     '''
     try:
-        object = joblib.load(object_path)
+        logging.info(f"Loading model from path {object_path}")
+        with open(object_path, 'rb') as file:
+            object = pickle.load(file)
         logging.info(f"Model loaded from path {object_path}")
         return object
     except Exception as e:
         raise CustomException(e, sys)
-
+    
 @ensure_annotations
 def read_sql_data():
     '''Read data from a SQL database

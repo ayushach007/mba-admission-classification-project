@@ -16,10 +16,28 @@ from xgboost import XGBClassifier
 from src.entity.config_entity import ModelTrainingConfig
 
 class ModelBuilding:
+    '''
+    This class is responsible for building models, hyperparameter tuning, training and evaluating models, saving models and metrics, and saving the best model
+    '''
     def __init__(self, config: ModelTrainingConfig):
         self.config = config
 
     def initiate_model_building(self, train_arr, test_arr):
+        '''
+        This function initiates model building process, splits data into train and test sets, specifies models to be trained, hyperparameter tuning for models, model training and evaluation, saves model and metrics, and saves the best model
+        
+        Args:
+            - train_arr: Training data
+            - test_arr: Testing data
+            
+        Returns:
+            - best_model: Best model
+            - best_model_score: Best model score
+            
+        Raises:
+            - CustomException: If any error occurs while initiating model building or saving the best model
+        '''
+
         try:
             logging.info("Initiating model building process")
             logging.info("Splitting data into train and test sets")

@@ -9,10 +9,23 @@ from src.components.model_building_and_evaluation import ModelTrainingConfig, Mo
 from sklearn.model_selection import train_test_split
 
 class DataIngestion:
+    '''
+    This class is responsible for reading data from MySQL database, saving raw data to raw data directory, splitting data into train and test data, and saving train and test data to train and test data directories
+    '''
     def __init__(self, config: DataIngestionConfig):
         self.config = config
 
     def initiate_data_ingestion(self) -> pd.DataFrame:
+        '''
+        This function reads data from MySQL database, saves raw data to raw data directory, splits data into train and test data, and saves train and test data to train and test data directories
+        
+        Returns:
+            - train_data_path: Path to train data
+            - test_data_path: Path to test data
+
+        Raises:
+            - CustomException: If any error occurs while reading and saving data
+        '''
         try:
             logging.info("Reading data from MySQL database")
             data = read_sql_data()

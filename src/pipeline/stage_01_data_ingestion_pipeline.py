@@ -8,10 +8,23 @@ from src.components.data_ingestion import DataIngestion
 STAGE_NAME = "Data Ingestion"
 
 class DataIngestionPipeline:
+    '''
+    This class is responsible for initiating the Data Ingestion Pipeline
+    '''
     def __init__(self):
         logging.info("Data Ingestion Pipeline initiated")
 
     def main(self):
+        '''
+        This function initiates the Data Ingestion Pipeline
+
+        Returns:
+            - training_data: Training data
+            - testing_data: Testing data
+
+        Raises:
+            - CustomException: If any error occurs while initiating the Data Ingestion Pipeline
+        '''
         try:
             config_manager = ConfigurationManager()
             data_ingestion_config = config_manager.get_data_ingestion_config()

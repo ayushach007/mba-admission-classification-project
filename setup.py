@@ -4,13 +4,13 @@ HYPHEN_DOT_E = '-e .'
 
 def get_requirements(file_path: str) -> list:
     '''
-    Read requirements.txt file and return list of requirements
+    This function reads the requirements.txt file and returns the list of requirements
 
     Args:
-    file_path: str: path to requirements.txt file
+        - file_path: str: path to requirements.txt file
 
     Returns:
-    list: list of requirements
+        - list: list of requirements
     '''
     with open(file_path, 'r') as f:
         requirements = f.readlines()

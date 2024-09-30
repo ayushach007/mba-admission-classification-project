@@ -9,32 +9,44 @@ files = [
     'src/__init__.py',
     'src/logger.py',
     'src/exception.py',
-    'src/utils.py',
     'src/components/__init__.py',
     'src/components/data_ingestion.py',
     'src/components/data_transformation.py',
-    'src/components/model_training.py',
-    'src/components/model_evaluation.py',
-    'src/pipeline/training_pipeline.py',
-    'src/pipeline/predict_pipeline.py',
+    'src/components/model_building_and_evaluation.py',
+    'src/pipeline/__init__.py'
+    'src/pipeline/stage_01_data_ingestion_pipeline.py',
+    'src/pipeline/stage_02_data_transformation_pipeline.py',
+    'src/pipeline/stage_03_model_building_and_evaluation.py',
+    'src/pipeline/stage_04_predict_pipeline.py',
+    'src/config/__init__.py',
+    'src/config/configuration.py',
+    'src/entity/__init__.py',
+    'src/entity/config_entity.py',
+    'src/utils/__init__.py',
+    'src/utils/common.py',
     'notebooks/EDA.ipynb',
     'notebooks/model_building.ipynb',
     'notebooks/01_data_ingestion.ipynb',
     'notebooks/02_data_transformation.ipynb',
-    'notebooks/03_model_training.ipynb',
-    'notebooks/04_model_evaluation.ipynb',
-    'notebooks/05_predict_pipeline.ipynb',
+    'notebooks/03_model_training_and_evaluation.ipynb'
+    'notebooks/04_predict_pipeline.ipynb',
     '.github/workflows/main.yaml',
+    'config/config.yaml',
+    '.env'
     'Dockerfile',
     'requirements.txt',
     'README.md',
     '.gitignore',
     'setup.py',
     'app.py',
+    'main.py'
     'templates.py'
 ]
 
 def create_files():
+    '''
+    This function creates all the files and directories specified in the files list
+    '''
     for file in files:
         file = Path(file)
         file_dir, file_name = os.path.split(file)

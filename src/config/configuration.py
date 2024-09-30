@@ -6,12 +6,15 @@ from src.utils.common import read_yaml_file, create_directory
 from src.entity.config_entity import (DataIngestionConfig, DataTransformationConfig, ModelTrainingConfig)
 
 class ConfigurationManager:
-    def __init__(self,
-                  config_file_path = CONFIG_FILE_PATH,
-                  params_file_path = PARAMS_FILE_PATH):
+    '''
+    This class is responsible for reading configuration and parameters files, creating directories to store artifacts, and getting data ingestion, data transformation, and model training configurations
+    '''
+    def __init__(self,config_file_path = CONFIG_FILE_PATH):
+        '''
+        This function reads configuration and parameters files, creates directories to store artifacts
+        '''
         try:
             self.config = read_yaml_file(config_file_path)
-            self.params = read_yaml_file(params_file_path)
 
             logging.info("Configuration and Parameters files have been read successfully")
 
@@ -22,6 +25,12 @@ class ConfigurationManager:
             raise CustomException(e, sys)
 
     def get_data_ingestion_config(self) -> DataIngestionConfig:
+        '''
+        This function gets data ingestion configuration, creates root directory to store raw data, train data and test data, assigns paths to raw data, train data and test data, and returns data ingestion configuration
+
+        Returns:
+            - data_ingestion_config: DataIngestionConfig object
+        '''
         try:
             config = self.config.data_ingestion
 
@@ -47,6 +56,12 @@ class ConfigurationManager:
             raise CustomException(e, sys)
     
     def get_data_transformation_config(self) -> DataTransformationConfig:
+        '''
+        This function gets data transformation configuration, creates root directory to store transformed data, assigns paths to preprocessor object, train array and test array, and returns data transformation configuration
+        
+        Returns:
+            - data_transformation_config: DataTransformationConfig object
+        '''
         try:
             logging.info("Getting data transformation config")
             config = self.config.data_transformation
@@ -69,6 +84,12 @@ class ConfigurationManager:
             raise CustomException(e, sys)
     
     def get_model_config(self) -> ModelTrainingConfig:
+        '''
+        This function gets model training configuration, creates root directory to store model artifacts, assigns paths to model and model metrics, and returns model training configuration
+
+        Returns:
+            - model_config: ModelTrainingConfig object
+        '''
         try:
             config = self.config.model_training
             logging.info("Creating directories to store model artifacts")

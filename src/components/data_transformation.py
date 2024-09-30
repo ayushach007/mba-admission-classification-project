@@ -13,6 +13,9 @@ import pandas as pd
 import numpy as np
 
 class DataTransformation:
+    '''
+    This class is responsible for transforming the data, saving the preprocessor object, and saving the transformed data
+    '''
     def __init__(self, 
                  config: DataTransformationConfig):
         
@@ -23,7 +26,10 @@ class DataTransformation:
         This function creates a preprocessor object and saves it to the path specified in the configuration file
 
         Returns:
-        preprocessor: ColumnTransformer object
+            - preprocessor: ColumnTransformer object
+
+        Raises:
+            - CustomException: If any error occurs while creating the preprocessor object
         '''
         try:
             logging.info("Specifying the numerical and categorical features")
@@ -66,14 +72,7 @@ class DataTransformation:
 
             logging.info("Successfully created column transformer")
 
-            logging.info("Saving the preprocessor object to the specified path")
-            save_object(
-                object= preprocessor, 
-                object_path = self.config.preprocessor_obj_path
-                )
-            logging.info("Preprocessor object has been saved successfully")
-
-            logging.info("Returning the preprocessor object")
+            logging.info("Returning the preprocessor/column_transformer object")
             return preprocessor
         
         except Exception as e:
@@ -84,8 +83,17 @@ class DataTransformation:
         '''
         This function transforms the data using the preprocessor object
 
+        Args:
+            - training_data: path to the training data
+            - testing_data: path to the testing data
+
         Returns:
-        transformed_data: DataFrame
+            - train_arr: Transformed training data
+            - test_arr: Transformed testing data
+            - preprocessor_obj_path: Path to the preprocessor object
+
+        Raises:
+            - CustomException: If any error occurs while transforming the data or saving the preprocessor object
         '''
         try:
             logging.info("Reading the training and testing data")
@@ -144,6 +152,14 @@ class DataTransformation:
                 transformed_test_data,
                 transformed_test_target
             ]
+ 
+            logging.info("Saving the preprocessor object to the specified path")
+            save_object(
+                object= preprocessor, 
+                object_path = self.config.preprocessor_obj_path
+                )
+            logging.info("Preprocessor object has been saved successfully")
+
 
             logging.info("Saving the transformed trained data")
             save_transformed_data(
@@ -164,7 +180,11 @@ class DataTransformation:
 
             logging.info("Returning the transformed data")
 
-            return train_arr, test_arr
+            return (
+                train_arr,
+                test_arr,
+                self.config.preprocessor_obj_path
+            )
 
         except Exception as e:
             raise CustomException(e, sys)
