@@ -12,7 +12,7 @@ STAGE_NAME = "Data Ingestion"
 try:
     logging.info(f"Starting : {STAGE_NAME}")
     data_ingestion_pipeline = DataIngestionPipeline()
-    data_ingestion_pipeline.main()
+    training_data, testing_data = data_ingestion_pipeline.main()
     logging.info(f"Completed {STAGE_NAME} Pipeline")
 
 except CustomException as e:
@@ -22,8 +22,8 @@ except CustomException as e:
 STAGE_NAME = "Data Transformation"
 try:
     logging.info(f"Starting {STAGE_NAME} Pipeline")
-    data_ingestion_pipeline = DataTransformationPipeline()
-    data_ingestion_pipeline.main()
+    data_transformation_pipeline = DataTransformationPipeline(training_data=training_data, testing_data=testing_data)
+    train_arr, test_arr = data_transformation_pipeline.main()
     logging.info(f"Completed {STAGE_NAME} Pipeline")
 
 except CustomException as e:
@@ -36,7 +36,7 @@ STAGE_NAME = "Model Building"
 if __name__ == "__main__":
     try:
         logging.info(f"Starting {STAGE_NAME} Pipeline")
-        model_building_pipeline = ModelBuildingPipeline()
+        model_building_pipeline = ModelBuildingPipeline(train_array=train_arr, test_arr=test_arr)
         model_building_pipeline.main()
         logging.info(f"Completed {STAGE_NAME} Pipeline")
 

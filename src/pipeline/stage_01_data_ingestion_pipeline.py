@@ -16,7 +16,9 @@ class DataIngestionPipeline:
             config_manager = ConfigurationManager()
             data_ingestion_config = config_manager.get_data_ingestion_config()
             data_ingestion = DataIngestion(data_ingestion_config)
-            data_ingestion.initiate_data_ingestion()
+            training_data, testing_data = data_ingestion.initiate_data_ingestion()
+
+            return training_data, testing_data
         except Exception as e:
             raise CustomException(e, sys)
         

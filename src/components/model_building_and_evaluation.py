@@ -108,12 +108,10 @@ class ModelBuilding:
 
             best_model = models[best_model_name]
 
-            print(f'The best model is {best_model_name} with an accuracy of {best_model_score}')
-
             if best_model_score < 0.75:
                 logging.warning("Model performance is below 75%. Please consider retraining the model")
 
-            logging.info(f'The best model is {best_model_name} with an r2 score of {best_model_score}')
+            logging.info(f'The best model is {best_model_name} with an accuracy score of {best_model_score}')
 
             logging.info("Saving the best model")
             save_object(
@@ -123,7 +121,7 @@ class ModelBuilding:
 
             logging.info("Model has been saved successfully")
 
-            return best_model
+            return best_model, best_model_score
 
         except Exception as e:
             raise CustomException(e, sys)

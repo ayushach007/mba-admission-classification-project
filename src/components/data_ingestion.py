@@ -41,31 +41,3 @@ class DataIngestion:
         
         except Exception as e:
             raise CustomException(e, sys)
-
-    
-# if __name__ == "__main__":
-#     data_ingestion_config = DataIngestionConfig(
-#         raw_data_path = "artifacts/data_ingestion/raw_data.csv",
-#         train_data_path = "artifacts/data_ingestion/train_data.csv",
-#         test_data_path = "artifacts/data_ingestion/test_data.csv"
-#     )
-
-#     data_ingestion = DataIngestion(data_ingestion_config)
-#     training_data, testing_data = data_ingestion.initiate_data_ingestion()
-
-#     data_transformation_config = DataTransformationConfig(
-#         preprocessor_obj_path="artifacts/data_transformation/preprocessor.pkl",
-#         train_arr = "artifacts/data_transformation/transformed_train_data.csv",
-#         test_arr = "artifacts/data_transformation/transformed_test_data.csv"
-#     )
-
-#     data_transformation = DataTransformation(data_transformation_config)
-#     train_arr, test_arr = data_transformation.initiate_data_transformation(training_data, testing_data)
-
-#     data_transformation_config = ModelTrainingConfig(
-#         model_path = 'artifacts/model_training/model.joblib',
-#         model_metrics_path = 'artifacts/model_training/model_metrics.json'
-#     )
-
-#     model_building = ModelBuilding(data_transformation_config)
-#     model_building.initiate_model_building(train_arr, test_arr)
