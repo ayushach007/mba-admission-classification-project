@@ -50,6 +50,8 @@ class ConfigurationManager:
 
             logging.info("Paths have been assigned successfully")
 
+            logging.info("Returning data ingestion config")
+
             return data_ingestion_config
         
         except Exception as e:
@@ -71,13 +73,16 @@ class ConfigurationManager:
 
             logging.info("Directories have been created successfully to store transformed data")
 
-            logging.info("Returning data transformation config")
+            logging.info("Assgining paths to preprocessor object, train array and test array")
             data_transformation_config = DataTransformationConfig(
                 preprocessor_obj_path = config.preprocessor_obj_path,
                 train_arr = config.train_arr_path,
                 test_arr = config.test_arr_path
             )
 
+            logging.info("Paths have been assigned successfully")
+
+            logging.info("Returning data transformation config")
             return data_transformation_config
 
         except Exception as e:
@@ -97,10 +102,15 @@ class ConfigurationManager:
 
             logging.info("Directories have been created successfully")
 
+            logging.info("Assigning paths to model and model metrics")
+
             model_config = ModelTrainingConfig(
                 model_path = config.model_path,
-                model_metrics_path = config.model_metrics_path
-            )
+                training_metrics = config.training_metrics,
+                test_metrics = config.test_metrics,
+                )
+            
+            logging.info("Paths have been assigned successfully")
 
             return model_config
         

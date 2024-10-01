@@ -19,14 +19,11 @@ def app():
         - CustomException: If any error occurs while creating the streamlit app or predicting the output
     '''
     try:
+
+        st.set_page_config(page_title='MBA Admission Predictor', page_icon=':mortar_board:', layout='centered', initial_sidebar_state='auto')
+
         # create title inthe center using markdown
         st.markdown("<h1 style='text-align: center;'>MBA Admission Predictor</h1>", unsafe_allow_html=True)
-
-        with open('styles.css') as f:
-            css = f.read()
-        
-        # Apply the styles
-        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
 
         logging.info('Taking input features from the user')
 
@@ -34,11 +31,11 @@ def app():
 
         with main_col:
             
-            with st.container():
-                gen_col, int_col = st.columns(2)
-                gpa_col, major_col = st.columns(2)
-                race_col, gmat_col = st.columns(2)
-                work_exp_col, work_ind_col = st.columns(2)
+            with st.container(border=True):
+                gen_col, _, int_col = st.columns([2, 0.4, 2])
+                gpa_col, _, major_col = st.columns([2, 0.4, 2])
+                race_col, _, gmat_col = st.columns([2, 0.4, 2])
+                work_exp_col, _, work_ind_col = st.columns([2, 0.4, 2])
                 
                 with gen_col:
                     gender = st.selectbox(
@@ -129,15 +126,19 @@ def app():
 
                         # convert the prediction into readable format like 0 for admit and 1 for reject and 2 for waitlist
                         if pred == 0:
-                            st.success(':smile: Congratulations! You are Admitted')
+                            st.info(':disappointed: Sorry! You are Rejected')
                         elif pred == 1:
-                            st.info('Sorry! You are Rejected')
+                            st.info(':smiley: Congratulations! You are Admitted')
                         elif pred == 2:
-                            st.info(':expressionless: You are in Waitlist')
+                            st.info(':neutral_face: You are in the waitlist')
                         else:
                             st.error(':warning: Prediction not found for the given input')
                     else:
                         st.info(":warning: Please fill all the fields")
+
+
+        # at the end of the app, display the author name
+        st.markdown("<h5 style='text-align: left;'>Created by : <a href='https://www.linkedin.com/in/ayush-acharya-912955282/'>Ayush Acharya</a></h4>", unsafe_allow_html=True)
 
     except Exception as e:
         raise CustomException(e, sys)

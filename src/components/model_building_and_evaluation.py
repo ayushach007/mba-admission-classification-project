@@ -5,6 +5,7 @@ from src import *
 from src.utils.common import (save_object, 
                               eval_model, 
                               save_model_metrics)
+from imblearn.over_sampling import SMOTE
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import (RandomForestClassifier, 
                               GradientBoostingClassifier, 
@@ -45,6 +46,15 @@ class ModelBuilding:
             y_train = train_arr[:, -1]
             X_test = test_arr[:, :-1]
             y_test = test_arr[:, -1]
+
+
+            # doing oversampling as the data is imbalanced
+            sm = SMOTE(random_state=42)
+            logging.info("Oversampling the data")
+
+            X_train, y_train = sm.fit_resample(X_train, y_train)
+
+            logging.info("Oversampling has been done successfully")
 
             logging.info("Splitting has been done successfully")
 
@@ -110,19 +120,30 @@ class ModelBuilding:
 
             logging.info("Model training and evaluation")
 
-            model_report: dict = eval_model(X_train, X_test, y_train, y_test, models, params)
+            # Evaluate models
+            training_metrics, test_metrics = eval_model(X_train, X_test, y_train, y_test, models, params)
 
             logging.info("Model training and evaluation has been done successfully")
 
             logging.info("Saving model and metrics")
+            
+            # Save model metrics
+            save_model_metrics(
+                report = training_metrics,
+                path = self.config.training_metrics
+            )
 
-            save_model_metrics(model_report, self.config.model_metrics_path)
+            save_model_metrics(
+                report = test_metrics,
+                path = self.config.test_metrics
+            )
+
             
             logging.info("Model and metrics have been saved successfully")
 
-            best_model_score = max(sorted(model_report.values()))
-
-            best_model_name = list(model_report.keys())[list(model_report.values()).index(best_model_score)]
+            # Select the best model based on test accuracy
+            best_model_score = max(test_metrics.values(), key=lambda x: x['accuracy'])['accuracy']
+            best_model_name = max(test_metrics, key=lambda x: test_metrics[x]['accuracy'])
 
             best_model = models[best_model_name]
 

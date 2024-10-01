@@ -15,8 +15,7 @@ data_transformation:
 model_training:
   root_dir: artifacts/model_training/
   model_path: artifacts/model_training/model.pkl
-  model_metrics_path: artifacts/model_training/model_metrics.json
+  training_metrics: artifacts/model_training/train_metrics.json
+  test_metrics: artifacts/model_training/test_metrics.json
 
-model_evaluation:
-  model_metrics_path: artifacts/model_evaluation/model_metrics.json
 

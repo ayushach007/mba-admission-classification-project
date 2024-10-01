@@ -25,4 +25,5 @@ class ModelTrainingConfig:
     This class holds the configuration for model training
     '''
     model_path: Path
-    model_metrics_path: Path
+    training_metrics: Path
+    test_metrics: Path

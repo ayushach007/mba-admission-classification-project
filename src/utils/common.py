@@ -15,7 +15,8 @@ import numpy as np
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 import json
-
+# import percision, recall, f1_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score,f1_score, confusion_matrix
 load_dotenv()
 
 
@@ -151,7 +152,7 @@ def save_transformed_data(data, path):
         raise CustomException(e, sys)
     
 @ensure_annotations
-def eval_model(X_train, X_test, y_train, y_test, models, param):
+def eval_model(X_train, X_test, y_train, y_test, models, params):
     '''
     This method evaluates the performance of the models on the test data.
     
@@ -174,15 +175,17 @@ def eval_model(X_train, X_test, y_train, y_test, models, param):
         The dictionary containing the model names and their corresponding accuracy scores
     '''
     try:
-        report = {}
+        training_metrics = {}
+        test_metrics = {}
 
         for i in range(len(list(models))):
-            model = list(models.values())[i]
-            params = list(param.values())[i]
+            model_name = list(models.keys())[i]
+            model = models[model_name]
+            param = params[model_name]
 
-            print(i, model, params)
+            print(i, model, param)
 
-            gs = GridSearchCV(model, params, cv=5)
+            gs = GridSearchCV(model, param, cv=5)
             gs.fit(X_train, y_train)
 
             # select the best parameters
@@ -197,9 +200,39 @@ def eval_model(X_train, X_test, y_train, y_test, models, param):
             train_model_accuracy = accuracy_score(y_train, y_train_pred)
             test_model_accuracy = accuracy_score(y_test, y_test_pred)
 
-            report[list(models.keys())[i]] = test_model_accuracy
+            train_model_precision = precision_score(y_train, y_train_pred, average='weighted')
+            test_model_precision = precision_score(y_test, y_test_pred, average='weighted')
 
-        return report
+            train_model_recall = recall_score(y_train, y_train_pred, average='weighted')
+            test_model_recall = recall_score(y_test, y_test_pred, average='weighted')
+
+            train_model_f1_score = f1_score(y_train, y_train_pred, average='weighted')
+            test_model_f1_score = f1_score(y_test, y_test_pred, average='weighted')
+
+            train_model_confusion_matrix = confusion_matrix(y_train, y_train_pred).tolist()
+            test_model_confusion_matrix = confusion_matrix(y_test, y_test_pred).tolist()
+
+            
+
+            training_metrics[model_name] = {
+                "accuracy": train_model_accuracy,
+                "precision": train_model_precision,
+                "recall": train_model_recall,
+                "f1_score": train_model_f1_score,
+                "confusion_matrix": train_model_confusion_matrix,
+                "best_params": best_params
+            }
+
+            test_metrics[model_name] = {
+                "accuracy": test_model_accuracy,
+                "precision": test_model_precision,
+                "recall": test_model_recall,
+                "f1_score": test_model_f1_score,
+                "confusion_matrix": test_model_confusion_matrix,
+                "best_params": best_params
+            }
+
+        return training_metrics, test_metrics
 
     except Exception as e:
         raise CustomException(e, sys)
@@ -219,10 +252,16 @@ def save_model_metrics(report, path):
         CustomException: If there is an error saving the model metrics
     '''
     try:
+        # Convert any non-serializable objects to serializable format
+        serializable_report = {}
+        for model_name, metrics in report.items():
+            serializable_metrics = {k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in metrics.items()}
+            serializable_metrics["model"] = model_name
+            serializable_report[model_name] = serializable_metrics
+
         logging.info(f"Saving model metrics to path {path}")
         with open(path, 'w') as f:
-            json.dump(report, f)
+            json.dump(serializable_report, f, indent=4, sort_keys=True)
         logging.info(f"Model metrics saved to path {path}")
     except Exception as e:
         raise CustomException(e, sys)
-    

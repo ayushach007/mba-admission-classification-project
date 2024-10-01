@@ -103,17 +103,19 @@ class DataTransformation:
             logging.info("Data has been read successfully")
 
             logging.info("Replacing empty strings with 'Rejected' in the admission column")
-            train_data['admission'] = train_data['admission'].replace('', 'Rejected')
-            test_data['admission'] = test_data['admission'].replace('', 'Rejected')
+
+            logging.info("Replacing empty strings and NaN values with 'Rejected' in the admission column")
+            train_data['admission'] = train_data['admission'].replace('', 'Reject').fillna('Reject')
+            test_data['admission'] = test_data['admission'].replace('', 'Reject').fillna('Reject')
 
             logging.info("Splitting the data into input features and target feature")
-            target = 'admission'
+            # target = ['admission']
 
             train_input_features = train_data.drop(columns=['admission', 'application_id'], axis=1)
-            train_target_feature = train_data[target]
+            train_target_feature = train_data['admission']
 
             test_input_features = test_data.drop(columns=['admission', 'application_id'], axis=1)
-            test_target_feature = test_data[target]
+            test_target_feature = test_data['admission']
 
             logging.info("Initializing the preprocessor object")
             preprocessor = self.create_preprocessor()
@@ -128,29 +130,26 @@ class DataTransformation:
             transformed_test_data = preprocessor.transform(test_input_features)
             logging.info("Testing data has been transformed successfully")
 
-            logging.info("Initializing the target encoder")
-            target_encoder = LabelEncoder()
+            logging.info("Transforming the training target feature using map function")
+            train_target_feature = train_target_feature.map({'Admit': 1, 'Reject': 0, 'Waitlist': 2})
 
-            logging.info("Fitting the target encoder on the training target feature")
-            target_encoder.fit(train_target_feature)
+            logging.info("Transforming the testing target feature using map function")
+            test_target_feature = test_target_feature.map({'Admit': 1, 'Reject': 0, 'Waitlist': 2})
 
-            logging.info("Transforming the training target feature")
-            transformed_train_target = target_encoder.transform(train_target_feature)
-
-            logging.info("Transforming the testing target feature")
-            transformed_test_target = target_encoder.transform(test_target_feature)
+            print("train_target_feature", train_target_feature.head(), end="\n\n")
+            print("test_target_feature", test_target_feature.head())
 
 
             logging.info("Combining the transformed training data and target feature")
             train_arr = np.c_[
                 transformed_train_data,
-                transformed_train_target
+                np.array(train_target_feature)
             ]
 
             logging.info("Combining the transformed testing data and target feature")
             test_arr = np.c_[
                 transformed_test_data,
-                transformed_test_target
+                np.array(test_target_feature)
             ]
  
             logging.info("Saving the preprocessor object to the specified path")
