@@ -166,4 +166,7 @@ admission/
 mba_classification.egg-info/
 .env
 logs/
-artifacts/
+artifacts/*
+!artifacts/data_ingestion/
+artifacts/data_ingestion/*.csv
+!artifacts/data_ingestion/raw_data.csv
