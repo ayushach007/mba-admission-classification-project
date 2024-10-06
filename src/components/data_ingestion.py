@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 class DataIngestion:
     '''
-    This class is responsible for reading data from MySQL database, saving raw data to raw data directory, splitting data into train and test data, and saving train and test data to train and test data directories
+    Class to ingest data from a source and save it to a destination
     '''
     def __init__(self, config: DataIngestionConfig):
         self.config = config
@@ -27,23 +27,21 @@ class DataIngestion:
             - CustomException: If any error occurs while reading and saving data
         '''
         try:
-            logging.info("Reading data from MySQL database")
             data = read_sql_data()  # replace this with read_csv or read_excel if you are reading from a csv or excel file
-            logging.info("Data has been read successfully")
 
-            logging.info("Saving data to raw data directory")
             data.to_csv(self.config.raw_data_path, index=False, header=True)
             logging.info(f"Raw has been saved successfully at {self.config.raw_data_path}")
 
             logging.info("Splitting data into train and test data")
-            train, test = train_test_split(data, test_size=0.3, random_state=42)
-            logging.info("Data has been split successfully")
+            train, test = train_test_split(data, test_size=0.3, random_state=42, stratify=data['admission'])
 
-            logging.info("Saving train data to train data directory")
+            logging.info("Data has been split successfully")
+            logging.info(f"Train data value counts: {train['admission'].value_counts()}")
+            logging.info(f"Test data value counts: {test['admission'].value_counts()}")
+
             train.to_csv(self.config.train_data_path, index=False, header=True)
             logging.info(f"Train data has been saved successfully at {self.config.train_data_path}")
 
-            logging.info("Saving test data to test data directory")
             test.to_csv(self.config.test_data_path, index=False, header=True)
             logging.info(f"Test data has been saved successfully at {self.config.test_data_path}")
             

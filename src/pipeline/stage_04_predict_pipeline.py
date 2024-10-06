@@ -4,7 +4,6 @@ import sys
 from src.logger import logging
 from src.exception import CustomException
 import warnings 
-
 warnings.filterwarnings('ignore')
 
 
@@ -102,18 +101,14 @@ class PredictionPipeline:
         try:
             logging.info('Prediction pipeline started')
 
-            logging.info('loading preprocessor and model for prediction')
-            preprocessor_path = 'artifacts/data_transformation/preprocessor.joblib'
-            preprocessor = load_object(preprocessor_path)
+            preprocessor = load_object('artifacts/data_transformation/preprocessor.joblib')
             model = load_object('artifacts/model_training/model.pkl')
 
             logging.info('Successfully loaded preprocessor and model for prediction')
 
-            logging.info('Transforming input features')
             scaled_features = preprocessor.transform(features)
             logging.info('Successfully transformed input features')
 
-            logging.info('Predicting the target')
             prediction = model.predict(scaled_features)
             logging.info('Successfully predicted the target')
 

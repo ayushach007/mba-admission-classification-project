@@ -25,7 +25,6 @@ def app():
         # create title inthe center using markdown
         st.markdown("<h1 style='text-align: center;'>MBA Admission Predictor</h1>", unsafe_allow_html=True)
 
-        logging.info('Taking input features from the user')
 
         _, main_col, _ = st.columns([0.5, 3, 0.5])
 
@@ -94,8 +93,6 @@ def app():
                         label= "**Work Industry**",
                         options= ["", 'Financial Services', 'Investment Management', 'Technology', 'Consulting','Nonprofit/Gov', 'PE/VC', 'Health Care', 'Investment Banking', 'Other', 'Retail', 'Energy', 'CPG', 'Real Estate', 'Media/Entertainment']
                     )
-
-                logging.info('Successfully took input features from the user')
 
                 if 'predict_output' not in st.session_state:
                     st.session_state.predict_output = False

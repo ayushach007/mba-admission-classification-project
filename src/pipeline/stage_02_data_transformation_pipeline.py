@@ -4,7 +4,6 @@ from src.exception import CustomException
 from src.config.configuration import ConfigurationManager
 from src.pipeline.stage_01_data_ingestion_pipeline import DataIngestionPipeline
 from src.components.data_transformation import DataTransformation
-
 import warnings
 warnings.filterwarnings("ignore")
 

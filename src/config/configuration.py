@@ -7,7 +7,7 @@ from src.entity.config_entity import (DataIngestionConfig, DataTransformationCon
 
 class ConfigurationManager:
     '''
-    This class is responsible for reading configuration and parameters files, creating directories to store artifacts, and getting data ingestion, data transformation, and model training configurations
+    Class to manage configuration and parameters files
     '''
     def __init__(self,config_file_path = CONFIG_FILE_PATH):
         '''
@@ -18,9 +18,8 @@ class ConfigurationManager:
 
             logging.info("Configuration and Parameters files have been read successfully")
 
-            logging.info("Creating directories to store artifacts")
             create_directory([self.config.artifacts_directory])
-            logging.info("Directories have been created successfully")
+            logging.info("Artifacts directory has been created successfully")
         except Exception as e:
             raise CustomException(e, sys)
 
@@ -34,13 +33,9 @@ class ConfigurationManager:
         try:
             config = self.config.data_ingestion
 
-            logging.info("Creating root directory to store raw data, train data and test data")
-
             create_directory([config.root_dir])
 
-            logging.info("Root directory has been created successfully")
-
-            logging.info("Assigning paths to raw data, train data and test data")
+            logging.info("DataIngestion directory has been created successfully to store raw data, train data and test data")
 
             data_ingestion_config = DataIngestionConfig(
                 raw_data_path = config.raw_data_path,
@@ -48,7 +43,7 @@ class ConfigurationManager:
                 test_data_path = config.test_data_path
             )
 
-            logging.info("Paths have been assigned successfully")
+            logging.info("Paths have been assigned successfully to raw data, train data and test data")
 
             logging.info("Returning data ingestion config")
 
@@ -65,22 +60,19 @@ class ConfigurationManager:
             - data_transformation_config: DataTransformationConfig object
         '''
         try:
-            logging.info("Getting data transformation config")
             config = self.config.data_transformation
 
-            logging.info("Creating directories to store transformed data")
             create_directory([config.root_dir])
 
-            logging.info("Directories have been created successfully to store transformed data")
+            logging.info("DataTransformation directory have been created successfully to store transformed data")
 
-            logging.info("Assgining paths to preprocessor object, train array and test array")
             data_transformation_config = DataTransformationConfig(
                 preprocessor_obj_path = config.preprocessor_obj_path,
                 train_arr = config.train_arr_path,
                 test_arr = config.test_arr_path
             )
 
-            logging.info("Paths have been assigned successfully")
+            logging.info("Paths have been assigned successfully to preprocessor object, train array and test array")
 
             logging.info("Returning data transformation config")
             return data_transformation_config
@@ -97,12 +89,10 @@ class ConfigurationManager:
         '''
         try:
             config = self.config.model_training
-            logging.info("Creating directories to store model artifacts")
+
             create_directory([config.root_dir])
 
-            logging.info("Directories have been created successfully")
-
-            logging.info("Assigning paths to model and model metrics")
+            logging.info("Model directory has been created successfully to store model artifacts")
 
             model_config = ModelTrainingConfig(
                 model_path = config.model_path,
@@ -110,7 +100,7 @@ class ConfigurationManager:
                 test_metrics = config.test_metrics,
                 )
             
-            logging.info("Paths have been assigned successfully")
+            logging.info("Paths have been assigned successfully to model and model metrics")
 
             return model_config
         

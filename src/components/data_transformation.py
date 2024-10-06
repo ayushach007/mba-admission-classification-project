@@ -14,7 +14,7 @@ import numpy as np
 
 class DataTransformation:
     '''
-    This class is responsible for transforming the data, saving the preprocessor object, and saving the transformed data
+    Class to transform the data and save the transformed data
     '''
     def __init__(self, 
                  config: DataTransformationConfig):
@@ -42,7 +42,6 @@ class DataTransformation:
                     'work_industry'
             ]
 
-            logging.info("Creating a numerical pipeline")
             num_pipeline = Pipeline(
                 steps=[
                     ('imputer', SimpleImputer(strategy='mean')),
@@ -52,7 +51,7 @@ class DataTransformation:
 
             logging.info("Successfully created numerical pipeline")
 
-            logging.info("Creating a categorical pipeline")
+
             cat_pipeline = Pipeline(
                 steps=[
                     ('imputer', SimpleImputer(strategy='most_frequent')),
@@ -62,7 +61,7 @@ class DataTransformation:
 
             logging.info("Successfully created categorical pipeline")
 
-            logging.info("Creating a column transformer")
+
             preprocessor = ColumnTransformer(
                 transformers=[
                     ('num', num_pipeline, numerical_features),
@@ -71,8 +70,6 @@ class DataTransformation:
             )
 
             logging.info("Successfully created column transformer")
-
-            logging.info("Returning the preprocessor/column_transformer object")
             return preprocessor
         
         except Exception as e:
@@ -96,20 +93,17 @@ class DataTransformation:
             - CustomException: If any error occurs while transforming the data or saving the preprocessor object
         '''
         try:
-            logging.info("Reading the training and testing data")
             train_data = pd.read_csv(training_data)
             test_data = pd.read_csv(testing_data)
 
-            logging.info("Data has been read successfully")
+            logging.info("Data has been read successfully for data transformation")
 
-            logging.info("Replacing empty strings with 'Rejected' in the admission column")
-
-            logging.info("Replacing empty strings and NaN values with 'Rejected' in the admission column")
             train_data['admission'] = train_data['admission'].replace('', 'Reject').fillna('Reject')
             test_data['admission'] = test_data['admission'].replace('', 'Reject').fillna('Reject')
 
+            logging.info("Successfully replaced missing values in the target feature")
+
             logging.info("Splitting the data into input features and target feature")
-            # target = ['admission']
 
             train_input_features = train_data.drop(columns=['admission', 'application_id'], axis=1)
             train_target_feature = train_data['admission']
@@ -117,56 +111,51 @@ class DataTransformation:
             test_input_features = test_data.drop(columns=['admission', 'application_id'], axis=1)
             test_target_feature = test_data['admission']
 
-            logging.info("Initializing the preprocessor object")
             preprocessor = self.create_preprocessor()
             
             logging.info("Preprocessor object has been initialized successfully")
 
-            logging.info("Transforming the training data")
+
             transformed_train_data = preprocessor.fit_transform(train_input_features)
             logging.info("Training data has been transformed successfully")
 
-            logging.info("Transforming the testing data")
+
             transformed_test_data = preprocessor.transform(test_input_features)
             logging.info("Testing data has been transformed successfully")
 
-            logging.info("Transforming the training target feature using map function")
             train_target_feature = train_target_feature.map({'Admit': 1, 'Reject': 0, 'Waitlist': 2})
-
-            logging.info("Transforming the testing target feature using map function")
             test_target_feature = test_target_feature.map({'Admit': 1, 'Reject': 0, 'Waitlist': 2})
 
-            print("train_target_feature", train_target_feature.head(), end="\n\n")
-            print("test_target_feature", test_target_feature.head())
+            logging.info("Successfully mapped the target feature to numerical values for training and testing data")
+
+            logging.info(f'Shape of transformed train data: {transformed_train_data.shape}')
+            logging.info(f'Shape of transformed test data: {transformed_test_data.shape}')
 
 
-            logging.info("Combining the transformed training data and target feature")
             train_arr = np.c_[
                 transformed_train_data,
                 np.array(train_target_feature)
             ]
 
-            logging.info("Combining the transformed testing data and target feature")
             test_arr = np.c_[
                 transformed_test_data,
                 np.array(test_target_feature)
             ]
+
+            logging.info("Successfully concatenated the transformed data with the target feature for training and testing data")
  
-            logging.info("Saving the preprocessor object to the specified path")
             save_object(
                 object= preprocessor, 
                 object_path = self.config.preprocessor_obj_path
                 )
-            logging.info("Preprocessor object has been saved successfully")
+            logging.info(f"Preprocessor object has been saved successfully at {self.config.preprocessor_obj_path}")
 
-
-            logging.info("Saving the transformed trained data")
             save_transformed_data(
                 data = train_arr, 
                 path = self.config.train_arr
             )
 
-            logging.info("Succesfully saved transformed train data")
+            logging.info(f"Successfully saved transformed train data at {self.config.train_arr}")
             
             logging.info("Saving the transformed test data")
             save_transformed_data(
@@ -174,7 +163,7 @@ class DataTransformation:
                 path = self.config.test_arr
             )
 
-            logging.info("Succesfully saved transformed train data")
+            logging.info(f"Successfully saved transformed test data at {self.config.test_arr}")
 
 
             logging.info("Returning the transformed data")

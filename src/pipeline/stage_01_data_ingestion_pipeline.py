@@ -3,9 +3,8 @@ from src.logger import logging
 from src.exception import CustomException
 from src.config.configuration import ConfigurationManager
 from src.components.data_ingestion import DataIngestion
-
-
-STAGE_NAME = "Data Ingestion"
+import warnings
+warnings.filterwarnings("ignore")
 
 class DataIngestionPipeline:
     '''

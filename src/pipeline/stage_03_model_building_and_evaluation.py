@@ -4,6 +4,9 @@ from src.exception import CustomException
 from src.config.configuration import ConfigurationManager
 from src.components.model_building_and_evaluation import ModelBuilding
 from src.pipeline.stage_02_data_transformation_pipeline import DataTransformationPipeline
+import warnings
+warnings.filterwarnings("ignore")
+
 
 class ModelBuildingPipeline:
     '''

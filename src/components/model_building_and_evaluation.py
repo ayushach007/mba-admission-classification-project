@@ -19,7 +19,7 @@ from urllib.parse import urlparse
 import mlflow
 class ModelBuilding:
     '''
-    This class is responsible for building models, hyperparameter tuning, training and evaluating models, saving models and metrics, and saving the best model
+    Class to build and evaluate models
     '''
     def __init__(self, config: ModelTrainingConfig):
         self.config = config
@@ -41,25 +41,18 @@ class ModelBuilding:
         '''
 
         try:
-            logging.info("Initiating model building process")
-            logging.info("Splitting data into train and test sets")
             X_train = train_arr[:, :-1]
             y_train = train_arr[:, -1]
             X_test = test_arr[:, :-1]
             y_test = test_arr[:, -1]
 
-
+            logging.info("Splitting has been done successfully for model building")
             # doing oversampling as the data is imbalanced
             sm = SMOTE(random_state=42)
-            logging.info("Oversampling the data")
 
             X_train, y_train = sm.fit_resample(X_train, y_train)
 
             logging.info("Oversampling has been done successfully")
-
-            logging.info("Splitting has been done successfully")
-
-            logging.info("Specifying models to be trained")
 
             models = {
                 "LogisticRegression": LogisticRegression(),
@@ -74,7 +67,6 @@ class ModelBuilding:
 
             logging.info("Models have been specified successfully")
 
-            logging.info("Hyperparameter tuning for models")
 
             params = {
                 "LogisticRegression": {
@@ -119,14 +111,11 @@ class ModelBuilding:
 
             logging.info("Hyperparameter tuning has been done successfully")
 
-            logging.info("Model training and evaluation")
 
             # Evaluate models
             training_metrics, test_metrics = eval_model(X_train, X_test, y_train, y_test, models, params)
 
             logging.info("Model training and evaluation has been done successfully")
-
-            logging.info("Saving model and metrics")
             
             # Save model metrics
             save_model_metrics(
@@ -140,7 +129,7 @@ class ModelBuilding:
             )
 
             
-            logging.info("Model and metrics have been saved successfully")
+            logging.info(f"Model metrics have been saved successfully at {self.config.training_metrics} and {self.config.test_metrics}")
 
             # Select the best model based on test accuracy
             best_model_score = max(test_metrics.values(), key=lambda x: x['accuracy'])['accuracy']
@@ -148,11 +137,16 @@ class ModelBuilding:
 
             best_model = models[best_model_name]
 
+            logging.info(f"The best model is {best_model_name} with an accuracy score of {best_model_score}")
+
+
+            logging.info("Tracking the best model using MLflow")
             actual_model = ""
             for model in models:
                 if model == best_model_name:
                     actual_model = actual_model + model
-                                                            
+
+                                
             mlflow.set_registry_uri("https://dagshub.com/ayushach007/mba-admission-classification-project.mlflow")
             tracking_uri_type = urlparse(mlflow.get_registry_uri()).scheme
 
@@ -175,15 +169,12 @@ class ModelBuilding:
             if best_model_score < 0.75:
                 logging.warning("Model performance is below 75%. Please consider retraining the model")
 
-            logging.info(f'The best model is {best_model_name} with an accuracy score of {best_model_score}')
-
-            logging.info("Saving the best model")
             save_object(
                 object = best_model,
                 object_path = self.config.model_path
             )
 
-            logging.info("Model has been saved successfully")
+            logging.info(f"Best model has been saved successfully at {self.config.model_path}")
 
             return best_model, best_model_score
 
