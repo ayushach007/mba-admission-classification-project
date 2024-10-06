@@ -35,13 +35,3 @@ class DataIngestionPipeline:
         except Exception as e:
             raise CustomException(e, sys)
         
-
-if __name__ == "__main__":
-    try:
-        logging.info(f"Starting {STAGE_NAME} Pipeline")
-        data_ingestion_pipeline = DataIngestionPipeline()
-        data_ingestion_pipeline.main()
-        logging.info(f"Completed {STAGE_NAME} Pipeline")
-
-    except CustomException as e:
-        raise CustomException(e, sys)

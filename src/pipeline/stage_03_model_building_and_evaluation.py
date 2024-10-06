@@ -30,23 +30,3 @@ class ModelBuildingPipeline:
         except Exception as e:
             raise CustomException(e, sys)
         
-STAGE_NAME = "Model Building"
-
-if __name__ == "__main__":
-    try:
-        logging.info(f"Starting {STAGE_NAME} Pipeline")
-
-        logging.info('Reading data from previous stage')
-        # initiate DataTransformationPipeline to get training and testing
-        data_transformation_pipeline = DataTransformationPipeline()
-        train_arr, test_arr = data_transformation_pipeline.main()
-
-        logging.info('Data read successfully from previous stage')
-
-        # Pass the data to ModelBuildingPipeline
-        model_building_pipeline = ModelBuildingPipeline(train_arr, test_arr)
-        model_building_pipeline.main()
-        logging.info(f"Completed {STAGE_NAME} Pipeline")
-
-    except CustomException as e:
-        raise CustomException(e, sys)

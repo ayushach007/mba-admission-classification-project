@@ -120,18 +120,4 @@ class PredictionPipeline:
             return prediction
         except Exception as e:
             raise CustomException(e, sys)
-        
-if __name__ == '__main__':
-    data = CustomData('M', 'No', 3.5, 'Finance', 'White', 700, 2, 'Finance')
-    features = data.get_data_as_dataframe()
-    pipeline = PredictionPipeline()
-    prediction = pipeline.predict(features)
-    if prediction[0] == 0:
-        print('Congratulations! You are admitted to the MBA program')
-    elif prediction[0] == 1:
-        print('Sorry! You are rejected from the MBA program')
-    elif prediction[0] == 2:
-        print('You are waitlisted for the MBA program')
-    else:
-        print('Invalid prediction')
     

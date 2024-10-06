@@ -40,25 +40,3 @@ class DataTransformationPipeline(DataIngestionPipeline):
         except Exception as e:
             raise CustomException(e, sys)
         
-STAGE_NAME = "Data Transformation"
-
-if __name__ == "__main__":
-    try:
-
-        logging.info(f"Starting {STAGE_NAME} Pipeline")
-
-        logging.info('Reading data from previous stage: Data Ingestion')
-        # Instantiate DataIngestionPipeline to get training and testing data
-        data_ingestion_pipeline = DataIngestionPipeline()
-        training_data, testing_data = data_ingestion_pipeline.main()
-
-        logging.info('Data read successfully from previous stage: Data Ingestion')
-
-        # Pass the data to DataTransformationPipeline
-        data_transformation_pipeline = DataTransformationPipeline(training_data, testing_data)
-        train_arr, test_arr = data_transformation_pipeline.main()
-
-        logging.info(f"Completed {STAGE_NAME}  successfully.")
-    except CustomException as e:
-        logging.error(f"Error in {STAGE_NAME}: {e}")
-        raise CustomException(e, sys)

@@ -28,7 +28,7 @@ class DataIngestion:
         '''
         try:
             logging.info("Reading data from MySQL database")
-            data = read_sql_data()
+            data = read_sql_data()  # replace this with read_csv or read_excel if you are reading from a csv or excel file
             logging.info("Data has been read successfully")
 
             logging.info("Saving data to raw data directory")

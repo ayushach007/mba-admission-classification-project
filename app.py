@@ -135,10 +135,9 @@ def app():
                             st.error(':warning: Prediction not found for the given input')
                     else:
                         st.info(":warning: Please fill all the fields")
-
-
-        # at the end of the app, display the author name
-        st.markdown("<h5 style='text-align: left;'>Created by : <a href='https://www.linkedin.com/in/ayush-acharya-912955282/'>Ayush Acharya</a></h4>", unsafe_allow_html=True)
+                
+            # at the end of the app, display the author name
+            st.markdown("<h5 style='text-align: left;'>Created by : <a href='https://www.linkedin.com/in/ayush-acharya-912955282/'>Ayush Acharya</a></h4>", unsafe_allow_html=True)
 
     except Exception as e:
         raise CustomException(e, sys)

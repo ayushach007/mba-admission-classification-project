@@ -15,7 +15,8 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
 from src.entity.config_entity import ModelTrainingConfig
-
+from urllib.parse import urlparse
+import mlflow
 class ModelBuilding:
     '''
     This class is responsible for building models, hyperparameter tuning, training and evaluating models, saving models and metrics, and saving the best model
@@ -146,6 +147,30 @@ class ModelBuilding:
             best_model_name = max(test_metrics, key=lambda x: test_metrics[x]['accuracy'])
 
             best_model = models[best_model_name]
+
+            actual_model = ""
+            for model in models:
+                if model == best_model_name:
+                    actual_model = actual_model + model
+                                                            
+            mlflow.set_registry_uri("https://dagshub.com/ayushach007/mba-admission-classification-project.mlflow")
+            tracking_uri_type = urlparse(mlflow.get_registry_uri()).scheme
+
+            # mlflow tracking
+            with mlflow.start_run():
+                mlflow.log_param("Model Name", best_model_name)
+                mlflow.log_param("Best Parameters", test_metrics[best_model_name]['best_params'])
+                mlflow.log_metric("Accuracy", test_metrics[best_model_name]['accuracy'])
+                mlflow.log_metric("Precision", test_metrics[best_model_name]['precision'])
+                mlflow.log_metric("Recall", test_metrics[best_model_name]['recall'])
+                mlflow.log_metric("F1 Score", test_metrics[best_model_name]['f1_score'])
+                # mlflow.log_metric("Confusion Matrix", test_metrics[best_model_name]['confusion_matrix'])
+
+            if tracking_uri_type != "file":
+                mlflow.sklearn.log_model(best_model, "model", registered_model_name=actual_model)
+            else:
+                mlflow.sklearn.log_model(best_model, "model")
+
 
             if best_model_score < 0.75:
                 logging.warning("Model performance is below 75%. Please consider retraining the model")
