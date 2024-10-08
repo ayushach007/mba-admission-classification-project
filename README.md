@@ -1,6 +1,3 @@
-
----
-
 # MBA Admission Predictor
 
 This project predicts the admission chances of students applying for MBA programs. The model forecasts if the student will get **admission**, be **rejected**, or be placed on a **waitlist**. It is a multi-class classification project. The dataset was sourced from Kaggle and stored in MySQL for further use. The project also incorporates a CI/CD pipeline with GitHub Actions and a Docker setup for future AWS deployment.
@@ -60,9 +57,23 @@ The MBA Admission Predictor is designed to predict whether a student will be acc
    ```
 
 5. **Run the Project**:
+  - Git Bash:
    ```bash
+    export MLFLOW_TRACKING_URI= YOUR PROJECT URI OF DagsHub 
+  ```
+
+  ```bash
+    export MLFLOW_TRACKING_USERNAME= YOUR USERNAME OF DagsHub
+  ```
+
+  ```bash
+    export MLFLOW_TRACKING_PASSWORD= YOUR PASSWORD OF DagsHub
+  ```
+
+  ```bash
     python main.py
-    ```
+  ```
+    
 
 6. **For Streamlit APP**:
      ```bash
@@ -71,7 +82,7 @@ The MBA Admission Predictor is designed to predict whether a student will be acc
 
 ---
 
-# AWS-CICD-Deployment-with-Github-Actions
+## AWS-CICD-Deployment-with-Github-Actions
 
 ### 1. Login to AWS console.
 
@@ -164,5 +175,3 @@ This project is licensed under the **GNU General Public License**. See the [LICE
 ## Future Improvements
 - Improve model accuracy through further hyperparameter tuning.
 - Experiment with deep learning algorithms to enhance prediction performance.
-  
----
